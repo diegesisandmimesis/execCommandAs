@@ -5,12 +5,8 @@
 //	A mechanism for executing a command (as in a command string) as
 //	an arbitrary actor.
 //
-//	Requires the modularExecuteCommand and outputToggle modules.
-//
-//	IMPORTANT:  The moreFailureReports module should also be used
-//		if you need conditional execution checking.  It corrects
-//		some default adv3 action reports that are incorrectly not
-//		marked as failures.
+//	Requires the outputToggle, modularExecuteCommand, and
+//	moreFailureReports modules.
 //
 //
 // USAGE
@@ -66,7 +62,11 @@ conditionalExecCommandAs(src, dst, toks, first) {
 	if(!checkExecCommand(src, dst, toks, first))
 		return(nil);
 
+#ifdef MODULAR_EXECUTE_COMMAND_H
 	modularExecuteCommand.execCommand(src, dst, toks, true);
+#else // MODULAR_EXECUTE_COMMAND_H
+	executeCommand(src, dst, toks, true);
+#endif // MODULAR_EXECUTE_COMMAND_H
 
 	return(true);
 }
@@ -92,10 +92,14 @@ execCommandWithUndo(src, dst, toks, first) {
 
 		gOutputOff;
 		gTranscript = new CommandTranscript();
+#ifdef MODULAR_EXECUTE_COMMAND_H
 		if(modularExecuteCommand.execCommand(src, dst, toks, first)
 			!= true) {
 			return(nil);
 		}
+#else // MODULAR_EXECUTE_COMMAND_H
+		executeCommand(src, dst, toks, first);
+#endif // MODULAR_EXECUTE_COMMAND_H
 
 		return(gTranscript);
 	}
