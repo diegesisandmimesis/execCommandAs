@@ -7,5 +7,6 @@
 -lib adv3/adv3
 -lib outputToggle/outputToggle
 -lib modularExecuteCommand/modularExecuteCommand
+-lib moreFailureReports/moreFailureReports
 -lib ../execCommandAs
 -source src/sample.t
