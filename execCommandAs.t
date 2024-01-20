@@ -83,15 +83,20 @@ checkExecCommand(src, dst, toks, first) {
 // Savepoint, execute the command with no output, and then undo.
 // Returns the transcript of the hypothetical action (or nil on exception).
 execCommandWithUndo(src, dst, toks, first) {
-	local tr;
+	local f, tr;
 
 	tr = gTranscript;
 
+	// Save the state of the output filter.
+	f = gOutputCheck;
+
 	try {
 		savepoint();
-
-		gOutputOff;
 		gTranscript = new CommandTranscript();
+
+		// Turn the output filter on.
+		gOutputOff;
+
 #ifdef MODULAR_EXECUTE_COMMAND_H
 		if(modularExecuteCommand.execCommand(src, dst, toks, first)
 			!= true) {
@@ -110,7 +115,9 @@ execCommandWithUndo(src, dst, toks, first) {
 
 	finally {
 		undo();
-		gOutputOn;
 		gTranscript = tr;
+
+		// Restore the output filter to its prior state.
+		gOutputSet(f);
 	}
 }
