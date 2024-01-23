@@ -88,14 +88,15 @@ execCommandWithUndo(src, dst, toks, first) {
 	tr = gTranscript;
 
 	// Save the state of the output filter.
-	f = gOutputCheck;
+	//f = gOutputLock;
 
 	try {
 		savepoint();
 		gTranscript = new CommandTranscript();
 
 		// Turn the output filter on.
-		gOutputOff;
+		//gOutputOff;
+		f = gOutputLock;
 
 #ifdef MODULAR_EXECUTE_COMMAND_H
 		if(modularExecuteCommand.execCommand(src, dst, toks, first)
@@ -114,10 +115,11 @@ execCommandWithUndo(src, dst, toks, first) {
 	}
 
 	finally {
+		gOutputUnlock(f);
 		undo();
 		gTranscript = tr;
 
 		// Restore the output filter to its prior state.
-		gOutputSet(f);
+		//gOutputSet(f);
 	}
 }
