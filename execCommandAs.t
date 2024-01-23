@@ -5,8 +5,7 @@
 //	A mechanism for executing a command (as in a command string) as
 //	an arbitrary actor.
 //
-//	Requires the outputToggle, modularExecuteCommand, and
-//	moreFailureReports modules.
+//	Requires the modularExecuteCommand moreFailureReports modules.
 //
 //
 // USAGE
@@ -62,11 +61,7 @@ conditionalExecCommandAs(src, dst, toks, first) {
 	if(!checkExecCommand(src, dst, toks, first))
 		return(nil);
 
-#ifdef MODULAR_EXECUTE_COMMAND_H
 	modularExecuteCommand.execCommand(src, dst, toks, true);
-#else // MODULAR_EXECUTE_COMMAND_H
-	executeCommand(src, dst, toks, true);
-#endif // MODULAR_EXECUTE_COMMAND_H
 
 	return(true);
 }
@@ -83,29 +78,20 @@ checkExecCommand(src, dst, toks, first) {
 // Savepoint, execute the command with no output, and then undo.
 // Returns the transcript of the hypothetical action (or nil on exception).
 execCommandWithUndo(src, dst, toks, first) {
-	local f, tr;
+	local tr;
 
 	tr = gTranscript;
 
-	// Save the state of the output filter.
-	//f = gOutputLock;
-
 	try {
 		savepoint();
+
 		gTranscript = new CommandTranscript();
+		execCommandAsFilter.active = true;
 
-		// Turn the output filter on.
-		//gOutputOff;
-		f = gOutputLock;
-
-#ifdef MODULAR_EXECUTE_COMMAND_H
 		if(modularExecuteCommand.execCommand(src, dst, toks, first)
 			!= true) {
 			return(nil);
 		}
-#else // MODULAR_EXECUTE_COMMAND_H
-		executeCommand(src, dst, toks, first);
-#endif // MODULAR_EXECUTE_COMMAND_H
 
 		return(gTranscript);
 	}
@@ -115,11 +101,18 @@ execCommandWithUndo(src, dst, toks, first) {
 	}
 
 	finally {
-		gOutputUnlock(f);
 		undo();
 		gTranscript = tr;
-
-		// Restore the output filter to its prior state.
-		//gOutputSet(f);
+		execCommandAsFilter.active = nil;
 	}
 }
+
+// Output filter that suppressed all output.
+// We use this in execCommandWithUndo() to suppress output without
+// disabling the transcript, because we want to save the results of
+// reports.
+execCommandAsFilter: OutputFilter, PreinitObject
+	active = nil
+	filterText(str, val) { return(active ? '' : inherited(str, val)); }
+	execute() { mainOutputStream.addOutputFilter(self); }
+;

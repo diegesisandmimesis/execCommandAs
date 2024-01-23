@@ -5,7 +5,6 @@
 -o games/testCases.t3
 -lib system
 -lib adv3/adv3
--lib outputToggle/outputToggle
 -lib modularExecuteCommand/modularExecuteCommand
 -lib moreFailureReports/moreFailureReports
 -lib ../execCommandAs
