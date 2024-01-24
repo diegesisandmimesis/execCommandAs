@@ -39,8 +39,14 @@ execCommandAsModuleID: ModuleID {
 // Optional third arg is a test-only flag.  If boolean true, execCommandAs()
 // will test the given command and return boolean true if it would succeed,
 // boolean nil otherwise.
-execCommandAs(actor, cmd, testOnly?) {
-	local toks;
+// Optional fourth arg will, if true, allow the executed command to "count
+// against" the actor's nextRunTime.  By default the actor's nextRunTime
+// will be set to be whatever it was before executing the command.  This
+// is in the assumption that execCommandAs() will mostly be used to
+// replace an actor's turn, and so the executed command should NOT make
+// the actor's next turn occur any later.
+execCommandAs(actor, cmd, testOnly?, leaveNextRunTime?) {
+	local r, t, toks;
 
 	if((actor == nil) || (cmd == nil))
 		return(nil);
@@ -51,7 +57,12 @@ execCommandAs(actor, cmd, testOnly?) {
 	if(testOnly == true) {
 		return(checkExecCommand(actor, actor, toks, true));
 	} else {
-		return(conditionalExecCommandAs(actor, actor, toks, true));
+		if(leaveNextRunTime != true)
+			t = actor.nextRunTime;
+		r = conditionalExecCommandAs(actor, actor, toks, true);
+		if(leaveNextRunTime != true)
+			actor.nextRunTime = t;
+		return(r);
 	}
 }
 
