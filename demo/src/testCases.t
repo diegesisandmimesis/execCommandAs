@@ -70,4 +70,4 @@ DefineSystemAction(Foozle)
 		}
 	}
 ;
-VerbRule(Foozle) 'foozle': FoozleAction VerbPhrase = 'foozle/foozling';
+VerbRule(Foozle) 'foozle': FoozleAction verbPhrase = 'foozle/foozling';
