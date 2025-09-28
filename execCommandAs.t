@@ -66,6 +66,20 @@ execCommandAs(actor, cmd, testOnly?, leaveNextRunTime?) {
 	}
 }
 
+forceExecCommandAs(actor, cmd) {
+	local r, toks;
+
+	if((actor == nil) || (cmd == nil))
+		return(nil);
+
+	if((toks = cmdTokenizer.tokenize(cmd)) == nil)
+		return(nil);
+
+	r = checkExecCommand(actor, actor, toks, true);
+	modularExecuteCommand.execCommand(actor, actor, toks, true);
+	return(r);
+}
+
 // Check to see if a command would succeed.  If it would, then execute
 // it "for real".
 conditionalExecCommandAs(src, dst, toks, first) {
