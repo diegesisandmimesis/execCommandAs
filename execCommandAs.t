@@ -5,7 +5,7 @@
 //	A mechanism for executing a command (as in a command string) as
 //	an arbitrary actor.
 //
-//	Requires the modularExecuteCommand moreFailureReports modules.
+//	Requires the adv3Mod and moreFailureReports modules.
 //
 //
 // USAGE
@@ -76,7 +76,7 @@ forceExecCommandAs(actor, cmd) {
 		return(nil);
 
 	r = checkExecCommand(actor, actor, toks, true);
-	modularExecuteCommand.execCommand(actor, actor, toks, true);
+	_executeCommand.execCommand(actor, actor, toks, true);
 	return(r);
 }
 
@@ -86,7 +86,7 @@ conditionalExecCommandAs(src, dst, toks, first) {
 	if(!checkExecCommand(src, dst, toks, first))
 		return(nil);
 
-	modularExecuteCommand.execCommand(src, dst, toks, true);
+	_executeCommand.execCommand(src, dst, toks, true);
 
 	return(true);
 }
@@ -113,7 +113,7 @@ execCommandWithUndo(src, dst, toks, first) {
 		gTranscript = new CommandTranscript();
 		execCommandAsFilter.active = true;
 
-		if(modularExecuteCommand.execCommand(src, dst, toks, first)
+		if(_executeCommand.execCommand(src, dst, toks, first)
 			!= true) {
 			return(nil);
 		}

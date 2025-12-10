@@ -5,15 +5,15 @@
 // Uncomment to enable debugging options.
 //#define __DEBUG_EXECCOMMANDAS
 
-#include "modularExecuteCommand.h"
-#ifndef MODULAR_EXECUTE_COMMAND_H
-#error "This module requires the modularExecuteCommand module."
-#error "https://github.com/diegesisandmimesis/modularExecuteCommand"
+#include "adv3Mod.h"
+#ifndef ADV3MOD_H
+#error "This module requires the adv3Mod module."
+#error "https://github.com/diegesisandmimesis/adv3Mod"
 #error "It should be in the same parent directory as this module.  So if"
 #error "execCommandAs is in /home/user/tads/execCommandAs, then"
-#error "modularExecuteCommand should be in"
-#error "/home/user/tads/modularExecuteCommand ."
-#endif // MODULAR_EXECUTE_COMMAND_H
+#error "adv3Mod should be in"
+#error "/home/user/tads/adv3Mod ."
+#endif // ADV3MOD_H
 
 #include "moreFailureReports.h"
 #ifndef MORE_FAILURE_REPORTS_H

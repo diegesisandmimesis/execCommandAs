@@ -5,7 +5,7 @@
 -o games/testCases.t3
 -lib system
 -lib adv3/adv3
--lib modularExecuteCommand/modularExecuteCommand
+-lib adv3Mod/adv3Mod
 -lib moreFailureReports/moreFailureReports
 -lib ../execCommandAs
 -source src/testCases.t
